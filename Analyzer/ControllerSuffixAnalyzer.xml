@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SourceAnalyzer Name="EPAM Some Project Custom Rules">
+  <Description>
+    Epam Some Project Custom Rules
+  </Description>
+  <Rules>
+    <Rule Name="ControllerSuffixRule" CheckId="EP1000">
+      <Context>Controller name must ended to '...Controller'</Context>
+      <Description>Controller name must ended to '...Controller'</Description>
+    </Rule>
+  </Rules>
+</SourceAnalyzer>
