@@ -22,14 +22,26 @@ namespace Analyzer
 
         private bool VisitElement(CsElement element, CsElement parentElement, object context)
         {
-            var controllerElement = element as Class;
-            if (controllerElement == null)
+            if (element is Class entityElement)
             {
-                return true;
-            }
-            if (!controllerElement.Name.EndsWith("Controller", System.StringComparison.Ordinal))
-            {
-                this.AddViolation(element, RULE_NAME);
+                var inNamespace = entityElement.FullNamespaceName.Contains("Entities");               
+                if (inNamespace)
+                {
+                    var isPublic = entityElement.AccessModifier == AccessModifierType.Public;
+                    if (isPublic)
+                    {
+                        var props = entityElement.ChildElements;
+                        var res = props
+                            .Where(p => (p as Property).Name == "Name" && (p as Property).AccessModifier == AccessModifierType.Public)
+                            .Where(p => (p as Property).Name == "Id" && (p as Property).AccessModifier == AccessModifierType.Public);
+                        if (!res.Any())
+                        {
+                           
+                        }
+                    }
+                    this.AddViolation(element, RULE_NAME);
+                    return true;
+                }
             }
             return false;
         }

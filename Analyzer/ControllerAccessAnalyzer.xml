@@ -4,9 +4,9 @@
     Epam Some Project Custom Rules
   </Description>
   <Rules>
-    <Rule Name="ControllerSuffixRule" CheckId="EP1002">
-      <Context>Controller</Context>
-      <Description>Controller</Description>
+    <Rule Name="ControllerAccessRule" CheckId="EP1002">
+      <Context>Controller must have 'Authorize' attribute</Context>
+      <Description>Controller must have 'Authorize' attribute</Description>
     </Rule>
   </Rules>
 </SourceAnalyzer>

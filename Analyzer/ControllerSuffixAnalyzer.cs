@@ -1,5 +1,6 @@
 ﻿using StyleCop;
 using StyleCop.CSharp;
+using System;
 using System.Web.Mvc;
 
 namespace Analyzer
@@ -18,16 +19,19 @@ namespace Analyzer
 
         private bool VisitElement(CsElement element, CsElement parentElement, object context)
         {
-            var controllerElement = element as Class;
-            if (controllerElement == null)
+            if (element is Class controllerElement)
             {
-                return true;
+                var controllerSuffix = "Controller";
+                var isController = controllerElement.BaseClass == controllerSuffix;
+                var shouldShowWarning = isController 
+                    && !controllerElement.Name.EndsWith(controllerSuffix, StringComparison.Ordinal);
+                if (shouldShowWarning)
+                {
+                    this.AddViolation(element, RULE_NAME);
+                }
+                return false;
             }
-            if (!controllerElement.Name.EndsWith("Controller", System.StringComparison.Ordinal))
-            {
-                this.AddViolation(element, RULE_NAME);
-            }
-            return false;
+            return true;
         }
     }
 }
