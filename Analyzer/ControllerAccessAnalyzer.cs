@@ -1,4 +1,4 @@
-﻿using StyleCop;
+using StyleCop;
 using StyleCop.CSharp;
 using System;
 using System.Collections.Generic;
@@ -24,6 +24,7 @@ namespace Analyzer
         {
             if (element is Class controllerElement)
             {
+                string v = string.Empty;
                 var className = "Controller";
                 var isController = controllerElement.BaseClass == className;
                 if (isController)
@@ -32,45 +33,40 @@ namespace Analyzer
                     var attrs = element.Attributes;
                     foreach (var attr in attrs)
                     {
-                        if (attr is StyleCop.CSharp.Attribute a)
+                        if (attr.Text == "[Authorize]")
                         {
-                            if (a.Text == "Authorize")
-                            {
-                                shouldShowError = false;
-                                break;
-                            }
+                            shouldShowError = false;
+                            break;
                         }
                     }
                     if (shouldShowError)
                     {
                         foreach (var method in element.ChildElements)
                         {
-                            if (method is StyleCop.CSharp.Method m)
+                            if (method is Method)
                             {
-                                var methodAttr = m.Attributes;
                                 var shouldShowMethodError = true;
+                                var methodAttr = method.Attributes;
                                 foreach (var attr in methodAttr)
                                 {
-                                    if (attr is StyleCop.CSharp.Attribute a)
+                                    v += attr.Text + " - ";
+                                    if (attr.Text == "[Authorize]")
                                     {
-                                        if (a.Text == "Authorize")
-                                        {
-                                            shouldShowMethodError = false;
-                                            break;
-                                        }
+                                        shouldShowMethodError = false;
+                                        shouldShowError = false;
+                                        break;
                                     }
                                 }
                                 if (shouldShowMethodError)
                                 {
-                                    this.AddViolation(element, RULE_NAME);
-                                    shouldShowError = false;
+                                    this.AddViolation(element, RULE_NAME, v);
                                 }
                             }
                         }
                     }
                     if (shouldShowError)
                     {
-                        this.AddViolation(element, RULE_NAME);
+                        this.AddViolation(element, RULE_NAME, v);
                     }
                 }
                 return false;
