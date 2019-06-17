@@ -1,4 +1,4 @@
-﻿using StyleCop;
+using StyleCop;
 using StyleCop.CSharp;
 using System;
 using System.Collections.Generic;
@@ -24,26 +24,61 @@ namespace Analyzer
         {
             if (element is Class entityElement)
             {
-                var inNamespace = entityElement.FullNamespaceName.Contains("Entities");               
+                string debugNamespace = string.Empty;
+                string debugProps = string.Empty;
+                var namespaceName = entityElement.FullNamespaceName;
+                var inNamespace = namespaceName.Contains("Entities");
+                debugNamespace = namespaceName;
+                var containsId = false;
+                var containsName = false;
                 if (inNamespace)
                 {
                     var isPublic = entityElement.AccessModifier == AccessModifierType.Public;
                     if (isPublic)
-                    {
+                    {                       
                         var props = entityElement.ChildElements;
-                        var res = props
-                            .Where(p => (p as Property).Name == "Name" && (p as Property).AccessModifier == AccessModifierType.Public)
-                            .Where(p => (p as Property).Name == "Id" && (p as Property).AccessModifier == AccessModifierType.Public);
-                        if (!res.Any())
+
+                        foreach (var prop in props)
                         {
-                           
+                            var shouldShowError = true;
+                            if (prop is Property)
+                            {
+                                debugProps += prop.Name + " - ";
+                                if (prop.Name == "property Name")
+                                {
+                                    containsName = true;
+                                }
+                                else if (prop.Name == "property Id")
+                                {
+                                    containsId = true;
+                                }
+                                foreach (var attr in prop.Attributes)
+                                {
+                                    if (attr.Text == "[DataContract]")
+                                    {
+                                        shouldShowError = false;
+                                        break;
+                                    }
+                                }
+                                if (shouldShowError)
+                                {
+                                    this.AddViolation(element, RULE_NAME, debugNamespace + "- datacontract", debugProps);
+                                }
+                            }
+                        }
+                        if (!containsName && !containsId)
+                        {
+                            this.AddViolation(element, RULE_NAME, debugNamespace + "- contains", debugProps);
                         }
                     }
-                    this.AddViolation(element, RULE_NAME);
-                    return true;
+                    else
+                    {
+                        this.AddViolation(element, RULE_NAME, debugNamespace + "- not public", debugProps);
+                    }
                 }
+                return false;
             }
-            return false;
+            return true;
         }
     }
 }
