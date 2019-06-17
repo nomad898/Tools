@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <SourceAnalyzer Name="EPAM Some Project Custom Rules">
   <Description>
     Epam Some Project Custom Rules
   </Description>
   <Rules>
     <Rule Name="ControllerAccessRule" CheckId="EP1002">
-      <Context>Controller must have 'Authorize' attribute</Context>
+      <Context>Controller must have 'Authorize' attribute {0}</Context>
       <Description>Controller must have 'Authorize' attribute</Description>
     </Rule>
   </Rules>
