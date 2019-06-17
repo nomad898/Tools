@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <SourceAnalyzer Name="EPAM Some Project Custom Rules">
   <Description>
     Epam Some Project Custom Rules
   </Description>
   <Rules>
     <Rule Name="EntityRule" CheckId="EP1001">
-      <Context>Entity</Context>
+      <Context>Entity - namespace: {0} - props: {1}</Context>
       <Description>Entity</Description>
     </Rule>
   </Rules>
